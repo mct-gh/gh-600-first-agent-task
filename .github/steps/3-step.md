@@ -1,35 +1,64 @@
-## Step 3: (replace-me: STEP-NAME)
+## Step 3: 사람이 결정한다
 
-(replace-me: OPTIONAL Brief story or scenario to introduce the step)
+리뷰를 마쳤습니다. 이제 마지막 결정을 내립니다. 이 단계가 이 실습의 핵심입니다.
 
-### 📖 Theory: (replace-me: Theory title)
+<img width="180" alt="Jetpacktocat" src="../images/jetpacktocat.png" />
 
-<!-- GitHub-styled notifications can be used outside of ordered lists. Available options are: NOTE, IMPORTANT, WARNING, TIP, CAUTION -->
-<!--
-> [!NOTE]
-> (Important note or additional information relevant to this section)
- -->
+### 📖 이론: 에이전트는 제안하고 사람이 수락한다
 
-(replace-me: Optional theory or background information relevant to this step)
+에이전트가 draft PR 을 자동으로 열었다는 사실을 다시 떠올려 봅시다.
+그런데 머지는 자동으로 되지 않았습니다. 이 경계가 설계된 것입니다.
 
-### ⌨️ Activity: (replace-me: Activity title)
+GH-600 이 반복해서 말하는 원칙이 하나 있습니다.
 
-1. (replace-me: First instruction)
+> 에이전트는 제안하고, 사람과 정책이 수락한다.
 
-   (replace-me: Make sure to properly indent any multiline instructions)
+에이전트가 할 수 있는 것과 못 하는 것을 나누면 이렇습니다.
 
-1. (replace-me: Second instruction)
+| 에이전트가 하는 것 | 사람과 정책이 하는 것 |
+| --- | --- |
+| 브랜치 생성 | 머지 여부 결정 |
+| 코드 변경과 커밋 | 승인 |
+| draft PR 열기 | 배포 승인 |
+| 체크 결과 보고 수정 시도 | 규칙 설정 |
 
-   (replace-me: Optionally reference images from the `.github/images/` directory to support any part of the content)
+에이전트는 작업을 시작할 때 지정한 리포지토리 밖으로 나갈 수 없습니다.
+기본 브랜치에 직접 쓰지도 못합니다. 항상 별도 브랜치에서 작업하고 PR 로 올립니다.
+이 브랜치 격리가 가장 기본적인 안전장치입니다.
 
-   <img width="200" alt="descriptive alt text" src="../images/jetpacktocat.png" />
+### ⌨️ 실습: 승인하고 머지한다
 
-1. (replace-me: Additional instructions as needed)
+1. Copilot 의 PR 로 돌아갑니다.
+
+1. 에이전트가 여러분의 리뷰에 반응했다면 바뀐 내용을 다시 확인합니다.
+
+    에이전트는 피드백을 받아 커밋을 더 얹을 수 있습니다. 이것이 plan → act → evaluate
+    루프가 한 바퀴 더 도는 모습입니다.
+
+1. PR 이 draft 라면 **Ready for review** 를 누릅니다.
+
+1. **Review changes** 에서 **Approve** 를 선택하고 제출합니다.
+
+1. **Merge pull request** 를 눌러 머지합니다.
+
+1. 머지된 사이트를 확인합니다.
+
+    `app/index.html` 을 열어 난이도 배지가 들어갔는지 봅니다.
 
 <details>
-<summary>Having trouble? 🤷</summary><br/>
+<summary>문제가 있나요? 🤷</summary><br/>
 
-- (replace-me: Troubleshooting tip or hint)
-- (replace-me: Additional troubleshooting tips as needed)
+- **Merge 버튼이 비활성입니다**
+  - PR 이 아직 draft 인지 확인하세요. Ready for review 를 먼저 눌러야 합니다.
+  - 충돌이 있으면 브랜치를 최신화해야 합니다.
+
+- **에이전트 결과가 마음에 들지 않습니다**
+  - 그것도 정상입니다. PR 댓글로 다시 요청하면 에이전트가 이어서 작업합니다.
+  - 실습을 넘어가려면 일단 머지하세요. 완벽한 결과가 목표가 아니라 흐름을 겪는 것이 목표입니다.
+
+- **머지했는데 다음 단계가 안 나옵니다**
+  - Actions 탭에서 워크플로가 도는지 확인하고 1분쯤 기다려 주세요.
 
 </details>
+
+---
