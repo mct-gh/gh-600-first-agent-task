@@ -1,36 +1,79 @@
-## Step 2: (replace-me: STEP-NAME)
+## Step 2: 계획을 먼저 읽고 리뷰한다
 
-(replace-me: OPTIONAL Brief story or scenario to introduce the step)
+에이전트가 draft Pull Request 를 열었습니다. 코드부터 보고 싶겠지만, 순서를 바꿉니다.
+**계획을 먼저 읽습니다.**
 
-### 📖 Theory: (replace-me: Theory title)
+<img width="180" alt="Inflatocat" src="../images/inflatocat.png" />
 
-<!-- GitHub-styled notifications can be used outside of ordered lists. Available options are: NOTE, IMPORTANT, WARNING, TIP, CAUTION -->
-<!--
-> [!NOTE]
-> (Important note or additional information relevant to this section)
- -->
+### 📖 이론: 기여자 모델
 
-(replace-me: Optional theory or background information relevant to this step)
+에이전트가 만든 결과물을 평가할 때 흔히 두 가지로 갈립니다.
 
-(replace-me: OPTIONAL Reference images from the `.github/images/` directory to support any part of the content)
+- 과도한 의심 — "AI 가 썼으니 못 믿겠다"
+- 과도한 신뢰 — "자동화가 만들었으니 괜찮겠지"
 
-<img width="200" alt="descriptive alt text" src="../images/inflatocat.png" />
+둘 다 틀렸습니다. GH-600 이 가르치는 관점은 **기여자 모델**입니다.
+작성자가 사람이든 에이전트든, Pull Request 는 같은 질문에 답해야 합니다.
 
+| 항목 | 무엇을 보는가 |
+| --- | --- |
+| Intent | 목표가 분명하고, 눈에 보이는 계획이 있는가 |
+| Scope | 바뀐 파일이 계획과 일치하는가. 계획에 없는 변경이 섞이지 않았는가 |
+| Evidence | 필수 체크가 통과했는가. 로그와 아티팩트를 볼 수 있는가 |
+| Ownership | 민감한 영역을 담당자가 검토했는가 |
+| Policy | 룰셋과 브랜치 규칙과 환경 설정을 지켰는가 |
+| Fallback | 위험한 변경에 롤백이나 에스컬레이션 경로가 있는가 |
 
-### ⌨️ Activity: (replace-me: Activity title)
+책임은 실행과 함께 옮겨가지 않습니다. 에이전트가 코드를 썼어도, 결과에 책임지는 것은
+작업을 정의하고 권한을 정하고 승인한 사람입니다.
 
-1. (replace-me: First instruction)
+> [!TIP]
+> 계획과 실행을 분리하는 이유가 여기 있습니다. 최종 diff 만 보면 의도를 검증할 기회를
+> 잃습니다. 오해를 일찍 잡고 범위를 미리 통제하려면 계획을 먼저 봐야 합니다.
 
-    (replace-me: Make sure to properly indent any multiline instructions)
+### ⌨️ 실습: 리뷰를 남긴다
 
-1. (replace-me: Second instruction)
+1. **Pull requests** 탭에서 Copilot 이 만든 draft PR 을 엽니다.
 
-1. (replace-me: Additional instructions as needed)
+1. PR 설명을 읽습니다.
+
+    에이전트가 무엇을 하려는지, 어떤 파일을 건드릴지 적혀 있습니다.
+    **View session** 버튼을 누르면 에이전트가 실제로 무엇을 했는지 로그로 볼 수 있습니다.
+
+1. **Files changed** 탭에서 바뀐 파일이 계획과 맞는지 봅니다.
+
+1. **Review changes** 를 누르고 리뷰를 작성합니다.
+
+    아래 여섯 항목을 **각각 한 줄씩** 평가해 주세요. 채점이 이 단어들을 찾습니다.
+
+    ```
+    Intent: 목표와 계획이 분명한가에 대한 평가
+    Scope: 바뀐 파일이 계획과 맞는가에 대한 평가
+    Evidence: 확인 가능한 근거가 있는가에 대한 평가
+    Ownership: 검토가 필요한 영역이 있는가에 대한 평가
+    Policy: 리포 규칙을 지켰는가에 대한 평가
+    Fallback: 되돌릴 방법이 있는가에 대한 평가
+    ```
+
+1. **Comment** 또는 **Request changes** 로 리뷰를 제출합니다.
+
+    아직 Approve 는 누르지 마세요. 다음 단계에서 합니다.
 
 <details>
-<summary>Having trouble? 🤷</summary><br/>
+<summary>문제가 있나요? 🤷</summary><br/>
 
-- (replace-me: Troubleshooting tip or hint)
-- (replace-me: Additional troubleshooting tips as needed)
+- **PR 이 안 보입니다**
+  - 에이전트 작업이 끝나야 PR 이 생깁니다. Pull requests 탭에서 **Draft** 필터를 확인하세요.
+  - 몇 분 더 기다려 보세요. 세션은 최대 59분까지 갑니다.
+
+- **리뷰를 제출했는데 다음 단계가 안 나옵니다**
+  - Review changes 로 정식 리뷰를 제출해야 합니다. 일반 댓글(Comment on this pull request)은
+    다른 이벤트라 채점이 잡지 못합니다.
+  - 여섯 항목 이름을 영어 그대로 적었는지 확인하세요.
+
+- **에이전트가 엉뚱한 파일을 건드렸습니다**
+  - 잘 잡으셨습니다. 그것이 Scope 항목에서 봐야 할 것입니다. 리뷰에 그대로 적으세요.
 
 </details>
+
+---
