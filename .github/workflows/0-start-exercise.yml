@@ -2,10 +2,9 @@ name: Step 0 # Start Exercise
 
 on:
   workflow_dispatch:
-  # NOTE: Make sure the repository is a template before enabling this trigger.
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -20,31 +19,89 @@ jobs:
     if: |
       !github.event.repository.is_template
     name: Start Exercise
-    uses: skills/exercise-toolkit/.github/workflows/start-exercise.yml@v0.9.1
+    uses: skills/exercise-toolkit/.github/workflows/start-exercise.yml@v0.9.3
     with:
-      exercise-title: "(replace-me: Exercise title)"
-      intro-message: "(replace-me: Brief one line introduction message for the exercise)"
+      exercise-title: "에이전트에게 첫 일을 맡긴다"
+      intro-message: "Copilot cloud agent 에게 실제로 일을 맡기고, 계획을 검토하고, 승인해서 머지해 봅니다. GH-600 실습 1입니다."
+
+  create_issues:
+    name: Create seed issues
+    needs: [start_exercise]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Create issues from markdown files
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            async function createIssuesFromMarkdownFiles(dir, label) {
+              if (!fs.existsSync(dir)) {
+                console.log(`No folder at ${dir}, skipping.`);
+                return;
+              }
+              const files = fs.readdirSync(dir);
+              console.log(`Creating ${files.length} issues with '${label}' label from '${dir}'.`);
+
+              for (const file of files) {
+                const fullPath = path.join(dir, file);
+                const fileContent = fs.readFileSync(fullPath, 'utf8');
+
+                const title = fileContent.split('\n')[0].replace('#', '').trim();
+                const body = fileContent.split('\n').slice(1).join('\n').split('----- COMMENTS -----')[0].trim();
+                let comments = fileContent.split('----- COMMENTS -----').slice(1).join('\n').trim().split('\n');
+                comments = comments.filter(c => c.trim() !== '');
+
+                const issue = await github.rest.issues.create({
+                  owner: owner,
+                  repo: repo,
+                  title: title,
+                  body: body,
+                  labels: [label],
+                });
+
+                for (const comment of comments) {
+                  await github.rest.issues.createComment({
+                    owner: owner,
+                    repo: repo,
+                    issue_number: issue.data.number,
+                    body: comment,
+                  });
+                }
+
+                console.log(`Created issue: ${title} -> ${issue.data.html_url}`);
+              }
+            }
+
+            await createIssuesFromMarkdownFiles('.github/steps/1-step-issues/enhancement/', 'enhancement');
 
   post_next_step_content:
     name: Post next step content
     runs-on: ubuntu-latest
-    needs: [start_exercise]
+    needs: [start_exercise, create_issues]
     env:
       ISSUE_NUMBER: ${{ needs.start_exercise.outputs.issue-number }}
       ISSUE_REPOSITORY: ${{ github.repository }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: main
 
       - name: Get response templates
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: skills/exercise-toolkit
           path: exercise-toolkit
-          ref: v0.9.1
+          ref: v0.9.3
 
       - name: Create comment - add step content
         uses: GrantBirki/comment@v2.1.1
@@ -64,7 +121,6 @@ jobs:
           file: exercise-toolkit/markdown-templates/step-feedback/watching-for-progress.md
 
       - name: Enable next step workflow
-        run: |
-          gh workflow enable "Step 1"
+        run: gh workflow enable "Step 1"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
